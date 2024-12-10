@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to BlogSpot</title>
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="logo">BlogSpot</div>
+    <a href="{% url 'index' %}" class="home-link">Home</a>
+    <a href="{% url 'blog_list' %}" class="blog-link">Blog</a>
+</header>
+
+<!-- Hero Section - Left side image, Right side text -->
+<section class="hero">
+    <div class="hero-left">
+        <img src="{% static 'images/default_image.jpeg' %}" alt="Hero Image">
+    </div>
+    <div class="hero-right">
+        <h1>Welcome to BlogSpot</h1>
+        <p>"A blog is a conversation, not a code." - Anonymous</p>
+    </div>
+</section>
+
+<footer class="footer">
+    <p>&copy; 2024 BlogSpot. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlogSpot - Blog List</title>
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="logo">BlogSpot</div>
+    <a href="{% url 'index' %}" class="home-link">Home</a>
+    <a href="{% url 'blog_list' %}" class="blog-link">Blog</a>
+</header>
+
+<div class="content">
+    <aside>
+        <div class="search-bar">
+            <form method="get" action="{% url 'search' %}">
+                <input type="text" name="query" placeholder="Search..." value="{{ query }}">
+            </form>
+        </div>
+
+        <div class="categories">
+            <h3>Categories</h3>
+            <ul>
+                <li><a href="{% url 'search' %}">All</a></li>
+                {% for category in categories %}
+                    <li><a href="{% url 'search' %}?category={{ category.slug }}">{{ category.category }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </aside>
+
+    <main class="blogs">
+        {% for blog in page_obj %}
+            <div class="blog-card" onclick="window.location.href='{% url 'blog_details' blog.slug %}'">
+                <!-- Thumbnail -->
+                <img src="{% if blog.thumbnail %}{{ blog.thumbnail.url }}{% else %}{% static 'images/default_image.jpeg' %}{% endif %}" alt="{{ blog.title }}">
+
+                <!-- Blog Category and Read Time above the title -->
+                <div class="blog-meta">
+                    <p class="blog-category">{{ blog.category.category }}</p>
+                    <p class="blog-readtime">{{ blog.readtime }}</p>
+                </div>
+
+                <!-- Blog Title and Description -->
+                <h3>{{ blog.title }}</h3>
+                <p>{{ blog.featured_text|truncatewords:20 }}</p>
+                <a href="{% url 'blog_details' blog.slug %}" class="read-more">Read More</a>
+            </div>
+        {% endfor %}
+    </main>
+</div>
+
+<!-- Pagination -->
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+        <a href="?page={{ num }}" {% if page_obj.number == num %}class="active"{% endif %}>{{ num }}</a>
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+</div>
+
+<footer class="footer">
+    <p>&copy; 2024 BlogSpot. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

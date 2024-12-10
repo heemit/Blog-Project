@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ blog.title }}</title>
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="logo">Blog</div>
+    <a href="/" class="home-link">Home</a>
+    <a href="{% url 'blog_list' %}" class="blog-link">Blog</a>
+</header>
+
+<section class="blog-detail">
+    <div class="blog-detail-header">
+        {% if blog.thumbnail %}
+            <img src="{{ blog.thumbnail.url }}" alt="{{ blog.title }}" class="blog-thumbnail">
+        {% else %}
+            <img src="{% static 'images/default_image.jpeg' %}" alt="Default Thumbnail" class="blog-thumbnail">
+        {% endif %}
+        <h1>{{ blog.title }}</h1>
+        <p><strong>Category:</strong> {{ blog.category.category }}</p>
+        <p><strong>Published on:</strong> {{ blog.created_at }}</p>
+        <p><strong>Read Time:</strong> {{ blog.readtime }}</p>
+    </div>
+    
+    <article class="blog-content">
+        <p>{{ blog.text|safe }}</p>
+    </article>
+
+    <a href="{% url 'blog_list' %}" class="back-link">Back to Blog List</a>
+</section>
+
+<footer class="footer">
+    <p>&copy; 2024 Blog. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
