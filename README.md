@@ -16,8 +16,17 @@ This Django-based blog project allows users to create, manage, and display blog 
 Before starting, make sure you have the following installed:
 
 - **Python 3.x**: The project is built with Python 3.
-- **Django 4.x**: The Django framework for web development.
-- **Additional Libraries**: `django-tinymce`, `django-simple-history`, and `django-model-utils`.
+- **Django>=4.0,<5.0**: The Django framework for web development.
+- **Additional Libraries**: 
+  - `django-tinymce==3.4.0`: For rich text editing.
+  - `django-simple-history==3.0.0`: To track changes to models.
+  - `django-model-utils==4.1.1`: For additional model utilities.
+  - `whitenoise==6.5.0`: To serve static files in production.
+  - `gunicorn==23.0.0`: A WSGI HTTP server for running the app.
+
+## Live Demo
+
+Access the blog here: [Blog Website](https://jittery-winonah-heemit-cfa0b49d.koyeb.app/blog/)
 
 ## Installation
 
