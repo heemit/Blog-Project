@@ -60,7 +60,7 @@ class Blog(CommonModel):
 
     title               =   models.CharField    (max_length=200, help_text="The title of the blog post.")
     sub_title           =   models.CharField    (max_length=200, blank=True, null=True, help_text="An optional subtitle for the blog post.")
-    thumbnail           =   models.ImageField   (upload_to="blog/", default='/home/admin/project/blog/web/static/images/default_image.jpeg', help_text="A thumbnail image for the blog post.")
+    thumbnail           =   models.CharField    (max_length=255, blank=True, null=True, help_text="The relative path to the blog thumbnail image in GitHub (e.g., 'blog/image1.jpg').")
     category            =   models.ForeignKey   (BlogCategory, null=True, on_delete=models.SET_NULL, help_text="The category to which the blog belongs.")
     featured_text       =   HTMLField           (null=True, blank=True, help_text="A featured text or excerpt from the blog, with rich text support.")
     text                =   HTMLField           (null=True, blank=True, help_text="The main content of the blog post, with rich text support.")
@@ -80,7 +80,12 @@ class Blog(CommonModel):
 
     def __str__(self):
         return str(self.title)
-
+    
+    def get_thumbnail_url(self):
+        if self.thumbnail:
+            return f"https://raw.githubusercontent.com/heemit/Blog-Project/main/media/{self.thumbnail}"
+        return "default-image-url"  # URL for a default image in case none is provided
+    
     class Meta:
         verbose_name_plural = "Blog"
         ordering            = ['order_by']  # Sort in descending order
