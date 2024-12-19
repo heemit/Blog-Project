@@ -29,7 +29,7 @@
         <div class="categories">
             <h3>Categories</h3>
             <ul>
-                <li><a href="{% url 'search' %}">All</a></li>
+                <li><a href="{% url 'search' %}?category=all">All</a></li>
                 {% for category in categories %}
                     <li><a href="{% url 'search' %}?category={{ category.slug }}">{{ category.category }}</a></li>
                 {% endfor %}
@@ -41,7 +41,7 @@
         {% for blog in page_obj %}
             <div class="blog-card" onclick="window.location.href='{% url 'blog_details' blog.slug %}'">
                 <!-- Thumbnail -->
-                <img src="{% if blog.thumbnail %}{{ blog.thumbnail.url }}{% else %}{% static 'images/default_image.jpeg' %}{% endif %}" alt="{{ blog.title }}">
+                <img src="{{ blog.get_thumbnail_url }}" alt="{{ blog.title }}" onerror="this.onerror=null;this.src='{% static 'images/default_image.jpeg' %}'">
 
                 <!-- Blog Category and Read Time above the title -->
                 <div class="blog-meta">
