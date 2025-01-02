@@ -131,4 +131,3 @@ Access the blog here: [Blog Website](https://jittery-winonah-heemit-cfa0b49d.koy
 ![image](https://github.com/user-attachments/assets/bde5dfd9-c528-4468-a1b6-7c5a4fb9c212)
 
 ![image](https://github.com/user-attachments/assets/7f5f09df-bf4c-438d-90b6-09562625d1d1)
-
