@@ -12,6 +12,7 @@ from model_utils                        import FieldTracker
 # TinyMCE - For rich text editing
 from tinymce.models                     import HTMLField
 
+from grape_js.models                    import GrapeJsHTMLField
 # Common Model
 class CommonModel(models.Model):
     extra_params    =   models.JSONField        (blank=True, null=True, help_text="Extra parameters related to the model.")
@@ -62,8 +63,8 @@ class Blog(CommonModel):
     sub_title           =   models.CharField    (max_length=200, blank=True, null=True, help_text="An optional subtitle for the blog post.")
     thumbnail           =   models.CharField    (max_length=255, blank=True, null=True, help_text="The relative path to the blog thumbnail image in GitHub (e.g., 'blog/image1.jpg').")
     category            =   models.ForeignKey   (BlogCategory, null=True, on_delete=models.SET_NULL, help_text="The category to which the blog belongs.")
-    featured_text       =   HTMLField           (null=True, blank=True, help_text="A featured text or excerpt from the blog, with rich text support.")
-    text                =   HTMLField           (null=True, blank=True, help_text="The main content of the blog post, with rich text support.")
+    featured_text       =   models.TextField    (null=True, blank=True, help_text="A featured text or excerpt from the blog, with rich text support.")
+    text                =   models.TextField    (null=True, blank=True, help_text="The main content of the blog post, with rich text support.")
     slug                =   models.SlugField    (unique=True, blank=True, null=True, help_text="A unique slug for the blog, auto-generated based on the title.")
     readtime            =   models.CharField    (max_length=200, null=True, blank=True, help_text="An estimated reading time for the blog post.")
     tags                =   models.TextField    (null=True, blank=True, default='all', help_text="A list of tags for the blog (comma-separated).")

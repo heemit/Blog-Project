@@ -7,12 +7,18 @@ from django.utils.text      import slugify
 # Import models
 from .models                import Blog, BlogCategory
 
+from grape_js.widgets       import GrapeJSWidget
+from grape_js.models        import GrapeJsHTMLField
+
+from unfold.admin           import ModelAdmin
+from django                 import forms
+
 # Generic Admin Class
-class GenericAdmin(admin.ModelAdmin):
-    # Use TinyMCE for TextField and HTMLField
+class GenericAdmin(ModelAdmin):
+    # Use GrapeJS for TextField and HTMLField
     formfield_overrides = {
-        models.TextField: {"widget": TinyMCE()},
-        HTMLField: {"widget": TinyMCE()},
+        models.TextField: {"widget": GrapeJSWidget()},
+        GrapeJsHTMLField: {"widget": GrapeJSWidget()},
     }
 
     def get_readonly_fields(self, request, obj=None):
@@ -27,7 +33,7 @@ class GenericAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 # BlogCategory Admin Customizations
-class BlogCategoryAdmin(admin.ModelAdmin):
+class BlogCategoryAdmin(ModelAdmin):
     list_display    =   ['category', 'slug']
     search_fields   =   ['category', 'slug']
     list_per_page   =   50
@@ -39,11 +45,25 @@ class BlogCategoryAdmin(admin.ModelAdmin):
             obj.slug = slugify(obj.category)  # Automatically generate slug if empty
         super().save_model(request, obj, form, change)
 
+class BlogAdminForm(forms.ModelForm):
+    class Meta:
+        model = Blog
+        fields = "__all__"
+        widgets = {
+            "text": GrapeJSWidget(),  # Apply GrapeJSWidget to the 'text' field
+            "featured_text": GrapeJSWidget(),  # Apply GrapeJSWidget to the 'featured_text' field
+        }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        print(f"Using GrapeJSWidget for: {self.fields['text']}")
+
+
 # Blog Admin Customizations
-class BlogAdmin(admin.ModelAdmin):
+class BlogAdmin(ModelAdmin):
+    form = BlogAdminForm
     formfield_overrides = {
-        models.TextField: {"widget": TinyMCE()},
-        HTMLField: {"widget": TinyMCE()},
+        models.TextField: {"widget": GrapeJSWidget()},
+        GrapeJsHTMLField: {"widget": GrapeJSWidget()},
     }
 
     list_display    =   ["id", "title", "category", "slug", "order_by", "created_at", "updated_at"]
@@ -57,6 +77,9 @@ class BlogAdmin(admin.ModelAdmin):
             'fields': ('title', 'sub_title', 'thumbnail', 'category', 'featured_text', 'text', 'slug', 'readtime', 'tags', 'order_by'),
         }),
     )
+    
+    class Media:
+        js = ('js/remove_textarea.js',)
 
     def save_model(self, request, obj, form, change):
         # Auto-generate the slug if not provided, but only for new objects
