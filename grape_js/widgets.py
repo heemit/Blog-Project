@@ -37,6 +37,8 @@ class GrapeJSWidget(widgets.Textarea):
         self.css_files = css_files or []
 
     def render(self, name, value, attrs=None, renderer=None):
+        # Render the textarea for GrapeJS
+        value = value or ''
         html = f'<textarea name="{name}" hidden>{value if value else ""}</textarea>'
 
         # Generate custom CSS links
@@ -47,38 +49,62 @@ class GrapeJSWidget(widgets.Textarea):
         # Add GrapeJS initialization script with plugins and CSS
         grapejs_script = f"""
         <div id="gjs-container-{name}" style="height: 500px; border: 1px solid #ddd; margin-top: 10px;"></div>
-        
+
         <script>
             document.addEventListener('DOMContentLoaded', function() {{
+                var existingContent = `{value.strip()}`;
+
                 var editor = grapesjs.init({{
                     container: '#gjs-container-{name}',
                     height: '80vh',
-                    fromElement: true,
+                    fromElement: false,
                     showOffsets: true,
+                    allowScripts: true,
+                    noticeOnUnload: false,
+                    clearOnRender: false,
+                    dragMode: 'absolute',
+                    storageManager: {{
+                        type: 'none',
+                    }},
                     assetManager: {{
                         embedAsBase64: true,
                         assets: [],
                     }},
                     selectorManager: {{ componentFirst: true }},
+                    canvas: {{
+                        styles: ['body {{ overflow: auto; }}'],
+                        scroll: true,
+                    }},
                     styleManager: {{
                         sectors: [
                             {{
                                 name: 'General',
+                                open: true,
                                 properties: [
-                                    'width', 'min-height', 'margin', 'padding'
+                                    'width', 'min-height', 'margin', 'padding', 'display', 'position',
+                                    'top', 'right', 'bottom', 'left', 'z-index'
                                 ],
+                            }},
+                            {{
+                                name: 'Layout',
+                                open: true,
+                                properties: [
+                                    'display', 'position', 'float', 'clear', 'width', 'height', 'top',
+                                    'left', 'right', 'bottom',
+                                ]
                             }},
                             {{
                                 name: 'Typography',
                                 properties: [
-                                    'font-family', 'font-size', 'font-weight', 'color', 'letter-spacing', 
+                                    'font-family', 'font-size', 'font-weight', 'color', 'letter-spacing',
                                     'line-height', 'text-align', 'text-shadow',
                                 ],
                             }},
                             {{
                                 name: 'Decorations',
+                                open: true,
                                 properties: [
-                                    'border-radius', 'border', 'box-shadow', 'background',
+                                    'width', 'height', 'background', 'border', 'box-shadow', 'border-radius'
                                 ],
                             }},
                         ],
@@ -97,12 +123,13 @@ class GrapeJSWidget(widgets.Textarea):
                         'grapesjs-typed',
                         'grapesjs-style-bg',
                         'grapesjs-preset-webpage',
+                        'grapesjs-preset-newsletter',
                     ],
                     pluginsOpts: {{
                         'gjs-blocks-basic': {{ flexGrid: true }},
                         'grapesjs-preset-webpage': {{
                             modalImportTitle: 'Import Template',
-                            modalImportLabel: '<div style="margin-bottom: 10px;">Paste here your HTML/CSS and click Import</div>',
+                            modalImportLabel: '<div>Paste your HTML/CSS and click Import</div>',
                             modalImportContent: function(editor) {{
                                 return editor.getHtml() + '<style>' + editor.getCss() + '</style>';
                             }},
@@ -112,9 +139,12 @@ class GrapeJSWidget(widgets.Textarea):
                             tooltipColor: '#fff',
                         }},
                     }},
+                    resizable: true,
                 }});
-                
 
+                if (existingContent) {{
+                    editor.setComponents(existingContent);
+                }}
 
                 // Inject custom CSS files into the GrapeJS iframe
                 var customCssFiles = {self.css_files};
@@ -128,12 +158,27 @@ class GrapeJSWidget(widgets.Textarea):
                         head.appendChild(link);
                     }});
                 }});
-                
+
                 // Update the textarea value on changes in GrapeJS editor
                 editor.on('update', () => {{
                     document.querySelector('[name="{name}"]').value = editor.getHtml();
                 }});
+
+                // Predefined Templates
+                editor.BlockManager.add('header-template', {{
+                    label: 'Header Template',
+                    content: '<header><h1>My Website Header</h1></header>',
+                }});
+                editor.BlockManager.add('footer-template', {{
+                    label: 'Footer Template',
+                    content: '<footer><p>&copy; 2025 My Website Footer</p></footer>',
+                }});
+                editor.BlockManager.add('landing-template', {{
+                    label: 'Landing Page Template',
+                    content: '<section class="landing-page"><h1>Welcome to My Website</h1><p>Great content goes here</p></section>',
+                }});
+
             }});
         </script>
         """
-        return mark_safe(html + grapejs_script)
+        return mark_safe(html + custom_css_links + grapejs_script)
