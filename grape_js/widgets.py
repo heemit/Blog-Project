@@ -37,8 +37,7 @@ class GrapeJSWidget(widgets.Textarea):
         self.css_files = css_files or []
 
     def render(self, name, value, attrs=None, renderer=None):
-        # Render the textarea for GrapeJS
-        html = super().render(name, value, attrs, renderer)
+        html = f'<textarea name="{name}" hidden>{value if value else ""}</textarea>'
 
         # Generate custom CSS links
         custom_css_links = ''.join(
