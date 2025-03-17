@@ -24,10 +24,6 @@ Before starting, make sure you have the following installed:
   - `whitenoise==6.5.0`: To serve static files in production.
   - `gunicorn==23.0.0`: A WSGI HTTP server for running the app.
 
-## Live Demo
-
-Access the blog here: [Blog Website](https://jittery-winonah-heemit-cfa0b49d.koyeb.app/blog/)
-
 ## Installation
 
 1. **Clone the repository**
