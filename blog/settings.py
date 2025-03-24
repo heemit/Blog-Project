@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-jercfx3!_m2_oztc_msdhkfp8blbbik2oss2yi=@d&ker9)ccj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['jittery-winonah-heemit-cfa0b49d.koyeb.app', '127.0.0.1']
+ALLOWED_HOSTS = ['https://hilarious-kirstyn-heemit-9741edd8.koyeb.app/', '127.0.0.1']
 
 
 # Application definition
