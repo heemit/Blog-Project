@@ -50,8 +50,14 @@ INSTALLED_APPS = [
     'grape_js',
 ]
 
+UNFOLD = {
+    "SITE_TITLE": "Django Admin",
+    "SITE_HEADER": "Admin Dashboard",
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
